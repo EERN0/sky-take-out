@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -65,6 +66,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      * */
     @Override
     public void addEmployee(EmployeeDTO employeeDTO) {
+
+        // 输出当前线程的id
+        System.out.println("当前线程的id:" + Thread.currentThread().getId());
+
         Employee employee = new Employee();
         // 对象属性拷贝，把EmployeeDTO对象属性赋值给Employee对象
         BeanUtils.copyProperties(employeeDTO, employee);    // source->target的属性名要对应上
@@ -79,10 +84,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
 
-        // 设置当前记录的创建人和修改人id
-        // TODO 后面要改为当前登录的员工id
-        employee.setCreateUser(10L);
-        employee.setUpdateUser(10L);
+        // 设置当前记录的创建人和修改人id (拦截器中从jwt令牌取出登录用户的id，存到ThreadLocal，这里再取出来)
+        // DONE 已修改为当前登录的员工id BaseContext.getCurrentId()
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
     }
