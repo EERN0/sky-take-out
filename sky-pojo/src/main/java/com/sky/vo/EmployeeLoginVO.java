@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+// VO: 视图对象，为前端展示数据提供的对象
 @Data
 @Builder
 @NoArgsConstructor
