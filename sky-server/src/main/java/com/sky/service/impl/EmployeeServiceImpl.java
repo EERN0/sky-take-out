@@ -66,9 +66,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
-    /*
+    /**
      * 新增员工
-     * */
+     *
+     * @param employeeDTO
+     */
     @Override
     public void addEmployee(EmployeeDTO employeeDTO) {
 
@@ -97,9 +99,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.insert(employee);
     }
 
-    /*
+    /**
      * 员工分页查询
-     * */
+     *
+     * @param employeePageQueryDTO
+     * @return
+     */
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         // select * from employee limit 0,10
@@ -115,9 +120,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(total, records);
     }
 
-    /*
+    /**
      * 启用、禁用员工账号（禁用的员工不能登录）
-     * */
+     *
+     * @param status
+     * @param id
+     */
     @Override
     public void startOrStop(Integer status, Long id) {
         // 执行sql: update employee set status = ? where id = ?
@@ -131,6 +139,35 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .status(status)
                 .id(id)
                 .build();
+
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 根据id查询员工数据
+     *
+     * @param id
+     */
+    @Override
+    public Employee getById(Long id) {
+        Employee employee = employeeMapper.getById(id);
+        employee.setPassword("****");   // 密码不能传给前端
+        return employee;
+    }
+
+    /**
+     * 编辑员工信息
+     *
+     * @param employeeDTO
+     */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        // 对象属性拷贝
+        BeanUtils.copyProperties(employeeDTO, employee);
+        // 设置修改时间和修改用户
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId()); // 通过ThreadLocal获取当前用户id（jwt拦截器里面设置好了用户id）
 
         employeeMapper.update(employee);
     }
