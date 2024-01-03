@@ -31,4 +31,9 @@ public interface EmployeeMapper {
      * 员工分页查询：动态SQL
      * */
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+
+    /*
+     * 根据主键id动态修改员工属性
+     * */
+    void update(Employee employee);
 }

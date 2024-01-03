@@ -115,4 +115,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(total, records);
     }
 
+    /*
+     * 启用、禁用员工账号（禁用的员工不能登录）
+     * */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        // 执行sql: update employee set status = ? where id = ?
+        // 这里用动态sql，不止更新status
+
+        // Employee类加了@Builder注解，可以不用传统的set()方法
+        //Employee employee = new Employee();
+        //employee.setStatus(status);
+        //employee.setId(id);
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+
+        employeeMapper.update(employee);
+    }
+
 }
