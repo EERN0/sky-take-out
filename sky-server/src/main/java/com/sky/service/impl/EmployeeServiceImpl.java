@@ -87,14 +87,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 设置密码，默认123456
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-        // 设置当前记录的创建时间和修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        // 设置当前记录的创建时间和修改时间 (已经设置公共字段的自动填充)
+        //employee.setCreateTime(LocalDateTime.now());
+        //employee.setUpdateTime(LocalDateTime.now());
 
         // 设置当前记录的创建人和修改人id (拦截器中从jwt令牌取出登录用户的id，存到ThreadLocal，这里再取出来)
         // DONE 已修改为当前登录的员工id BaseContext.getCurrentId()
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+        //employee.setCreateUser(BaseContext.getCurrentId());
+        //employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
     }
@@ -165,9 +165,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = new Employee();
         // 对象属性拷贝
         BeanUtils.copyProperties(employeeDTO, employee);
-        // 设置修改时间和修改用户
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId()); // 通过ThreadLocal获取当前用户id（jwt拦截器里面设置好了用户id）
+
+        // 设置修改时间和修改用户 (已经设置公共字段的自动填充)
+        //employee.setUpdateTime(LocalDateTime.now());
+        //employee.setUpdateUser(BaseContext.getCurrentId()); // 通过ThreadLocal获取当前用户id（jwt拦截器里面设置好了用户id）
 
         employeeMapper.update(employee);
     }
