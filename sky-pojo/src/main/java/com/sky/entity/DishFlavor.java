@@ -20,7 +20,7 @@ public class DishFlavor implements Serializable {
 
     private Long id;
     //菜品id
-    private Long dishId;
+    private Long dishId;    // dishId在添加菜品后，要获取到菜品主键id（注意DishMapper.xml中insert的写法）
 
     //口味名称
     private String name;

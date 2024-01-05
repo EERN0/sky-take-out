@@ -20,6 +20,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutoFill {
-    // 数据库操作为update insert时，才执行公共字段的自动填充操作（填充创建、更新的时间和用户）
+    // 数据库操作为update or insert，才执行公共字段的自动填充操作（填充创建、更新的时间和用户）
     OperationType value();  // 定义成员变量 value 类型是 OperationType 枚举
 }
