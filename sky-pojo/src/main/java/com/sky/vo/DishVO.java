@@ -11,6 +11,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DishDTO类只有菜品id (categoryId)，菜品查询返回值要有菜品名称 (用)
+ * 所以，设置DishVO类，用于前端展示菜品名称
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -32,7 +36,7 @@ public class DishVO implements Serializable {
     private Integer status;
     //更新时间
     private LocalDateTime updateTime;
-    //分类名称
+    // 分类名称
     private String categoryName;
     //菜品关联的口味
     private List<DishFlavor> flavors = new ArrayList<>();
