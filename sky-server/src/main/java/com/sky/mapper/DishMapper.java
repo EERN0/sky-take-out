@@ -56,6 +56,7 @@ public interface DishMapper {
 
     /**
      * 根据主键删除菜品
+     *
      * @param id
      */
     @Delete("delete from dish where id = #{id}")
@@ -63,7 +64,16 @@ public interface DishMapper {
 
     /**
      * 根据主键集合删除菜品
+     *
      * @param ids
      */
     void deleteByIds(List<Long> ids);
+
+    /**
+     * 根据id动态修改菜品
+     *
+     * @param dish
+     */
+    @AutoFill(OperationType.UPDATE)     // 自动填充的作用：自动给实体对象的updateTime、updateUser等赋值，并非执行了sql赋值操作，sql还需要自己写
+    void update(Dish dish);
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DishDTO类只有菜品id (categoryId)，菜品查询返回值要有菜品名称 (用)
+ * DishDTO类只有菜品id (categoryId)，菜品查询返回值要有菜品名称
  * 所以，设置DishVO类，用于前端展示菜品名称
  */
 @Data
