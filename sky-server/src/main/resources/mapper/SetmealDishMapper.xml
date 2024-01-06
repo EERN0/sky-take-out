@@ -10,4 +10,13 @@
             #{dishId}
         </foreach>
     </select>
+
+    <!--保存套餐和菜品的关系-->
+    <insert id="insertBatch" parameterType="SetmealDish">
+        insert into setmeal_dish (setmeal_id, dish_id, name, price, copies) VALUES
+        <foreach collection="setmealDishes" item="sd" separator=",">
+            (#{sd.setmealId},#{sd.dishId},#{sd.name},#{sd.price},#{sd.copies})
+        </foreach>
+    </insert>
+
 </mapper>

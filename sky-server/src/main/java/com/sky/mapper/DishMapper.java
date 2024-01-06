@@ -2,12 +2,10 @@ package com.sky.mapper;
 
 import com.github.pagehelper.Page;
 import com.sky.annotation.AutoFill;
-import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
-import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -35,6 +33,7 @@ public interface DishMapper {
      * @param dish
      */
     @AutoFill(value = OperationType.INSERT)
+    // 自动填充，为dish实体对象填上创建时间、用户，修改时间、用户
     void insert(Dish dish);
 
     /**
@@ -74,6 +73,15 @@ public interface DishMapper {
      *
      * @param dish
      */
-    @AutoFill(OperationType.UPDATE)     // 自动填充的作用：自动给实体对象的updateTime、updateUser等赋值，并非执行了sql赋值操作，sql还需要自己写
+    @AutoFill(OperationType.UPDATE)
+    // 自动填充的作用：自动给实体对象的updateTime、updateUser等赋值，并非执行了sql赋值操作，sql还需要自己写
     void update(Dish dish);
+
+    /**
+     * 动态查询菜品
+     *
+     * @param dish
+     */
+    //@Select("select * from dish where category_id = #{categoryId}")   // 不用动态查询，只根据categoryId查出菜品列表也是一样的
+    List<Dish> list(Dish dish);
 }
