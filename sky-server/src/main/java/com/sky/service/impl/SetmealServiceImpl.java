@@ -1,18 +1,23 @@
 package com.sky.service.impl;
 
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
 import com.sky.vo.SetmealVO;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,7 @@ import java.util.List;
 /**
  * 套餐业务实现
  */
+@Builder    // 加@Builder注解，可以不用set方法。直接 类名.builder().成员变量()
 @Service
 @Slf4j
 public class SetmealServiceImpl implements SetmealService {
@@ -79,5 +85,93 @@ public class SetmealServiceImpl implements SetmealService {
         Page<SetmealVO> page = setmealMapper.pageQuery(setmealPageQueryDTO);
 
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 套餐的批量删除
+     * <p>
+     * 启售中的套餐不能删，需要删除 setmeal表和setmeal_dish表中的setmeal数据
+     * </p>
+     *
+     * @param setmealIds
+     */
+    @Override
+    @Transactional
+    public void deleteBatch(List<Long> setmealIds) {
+        // 查套餐是否启售
+        for (Long setmealId : setmealIds) {
+            Setmeal setmeal = setmealMapper.getById(setmealId);
+            if (setmeal.getStatus() == StatusConstant.ENABLE) { // 套餐启售，不能删除
+                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
+            }
+        }
+        // 删除套餐表中数据
+        setmealMapper.deleteBatch(setmealIds);
+
+        // 删除套餐-菜品关联表中的数据
+        setmealDishMapper.deleteBatch(setmealIds);
+    }
+
+    /**
+     * 根据id查询套餐和对应的菜品
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public SetmealVO getById(Long id) {
+        Setmeal setmeal = setmealMapper.getById(id);
+        SetmealVO setmealVO = new SetmealVO();
+        BeanUtils.copyProperties(setmeal, setmealVO);
+
+        List<SetmealDish> list = setmealDishMapper.getDishListBySetmealId(setmeal.getId());
+        setmealVO.setSetmealDishes(list);
+
+        return setmealVO;
+    }
+
+    /**
+     * 修改套餐：修改套餐表 + 套餐-菜品 表
+     *
+     * @param setmealDTO
+     */
+    @Transactional
+    @Override
+    public void update(SetmealDTO setmealDTO) {
+        // 1.修改setmeal表（有修改时间、修改用户，所以要用到Setmeal类）
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal);
+
+        setmealMapper.update(setmeal);
+
+        // 2.修改套餐对应的菜品，操作setmeal_dish表。
+        // 先删除原表的数据，再把前端传来的套餐对应菜品数据写入到表中
+        setmealDishMapper.deleteById(setmealDTO.getId());
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes(); // 前端获取到的菜品列表数据 (前端添加菜品时，没有传进来setmealId，得自己加上)
+        if (setmealDishes != null && !setmealDishes.isEmpty()) {
+            setmealDishes.forEach(setmealDish -> setmealDish.setSetmealId(setmealDTO.getId()));     // 给setmealDish加上对应的套餐id
+            setmealDishMapper.insertBatch(setmealDishes);   // 批量插入套餐-菜品数据
+        }
+    }
+
+    /**
+     * 套餐的启售、停售
+     *
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {  // id是套餐id
+        // 根据套餐id查询对应的数据。启售的套餐可以停售，停售的套餐可以启售(启售的套餐中，菜品不能有停售的)
+        Setmeal setmeal = setmealMapper.getById(id);
+        if (setmeal.getStatus() == StatusConstant.ENABLE) {   // 启售的套餐可以停售
+            // 停售
+            if (status == 0) {
+                Setmeal setmeal1 = Setmeal.builder()
+                        .status(status)
+                        .id(id).build();
+                setmealMapper.update(setmeal);
+            }
+        }
     }
 }

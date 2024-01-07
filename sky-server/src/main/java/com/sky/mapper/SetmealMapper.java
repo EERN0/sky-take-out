@@ -9,6 +9,8 @@ import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface SetmealMapper {
 
@@ -37,4 +39,29 @@ public interface SetmealMapper {
      * @return
      */
     Page<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+
+    /**
+     * 根据套餐id查询套餐数据
+     *
+     * @param setmealId
+     * @return
+     */
+    @Select("select * from setmeal where id = #{setmealId}")
+    Setmeal getById(Long setmealId);
+
+    /**
+     * 根据套餐id集合批量删除套餐
+     *
+     * @param setmealIds
+     */
+    void deleteBatch(List<Long> setmealIds);
+
+    /**
+     * 根据套餐id动态更新套餐表的数据
+     *
+     * @param setmeal
+     */
+    @AutoFill(OperationType.UPDATE)
+    // 自动给实体对象的updateTime、updateUser等赋值，参数第1个只能是实体类
+    void update(Setmeal setmeal);
 }

@@ -120,7 +120,6 @@ public class DishServiceImpl implements DishService {
         // 根据菜品id集合批量删除关联的口味数据
         // sql: delete from dish_flavor where dish_id in (id1,id2,id3,...)
         dishFlavorMapper.deleteByDishIds(ids);
-
     }
 
     /**
@@ -165,7 +164,7 @@ public class DishServiceImpl implements DishService {
         List<DishFlavor> flavors = dishDTO.getFlavors();    // 拿到从前端传来的口味数据
         if (flavors != null && !flavors.isEmpty()) {
             flavors.forEach(dishFlavor -> {
-                dishFlavor.setDishId(dishDTO.getId());  // 重新设置口味id
+                dishFlavor.setDishId(dishDTO.getId());  // 重新设置口味的dishId（前端添加口味时，没有传进来dishId，得自行加上）
             });
             dishFlavorMapper.insertBench(flavors);      // 批量插入口味数据
         }
