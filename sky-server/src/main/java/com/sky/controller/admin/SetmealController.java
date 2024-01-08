@@ -102,7 +102,7 @@ public class SetmealController {
 
     @PostMapping("/status/{status}")
     public Result startOrStop(@PathVariable Integer status, Long id) {  // TODO 忘记注解@PathVariable的作用了，应该是对应路径参数，再去看看
-        log.info("套餐的启售、停售: {},{}", status, id); // id是套餐id
+        log.info("套餐的启售、停售: {}, id: {}", status, id); // status中0停售 1启售     id是套餐id
         setmealService.startOrStop(status, id);
         return Result.success();
     }
