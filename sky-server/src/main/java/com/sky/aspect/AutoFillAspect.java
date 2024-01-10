@@ -25,14 +25,14 @@ import java.time.LocalDateTime;
 public class AutoFillAspect {
 
     /*
-     * 定义切入点: 拦截具体类的方法 --》com.sky.mapper包下所有类的所有方法 && 方法上加了注解@AutoFill
+     * 定义切入点: 拦截具体类的方法，决定哪些方法需要加入通知 --> com.sky.mapper包下所有类的所有方法 && 方法上加了注解@AutoFill
      * */
     @Pointcut("execution(* com.sky.mapper.*.*(..)) && @annotation(com.sky.annotation.AutoFill)")
     public void autoFillPointCt() {
     }
 
     /*
-     * 前置通知，在通知中进行公共字段的赋值
+     * 前置通知方法，在通知中进行公共字段的赋值
      * (获取拦截到的方法的具体信息)
      * */
     @Before("autoFillPointCt()")

@@ -81,6 +81,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/{id}")
+    @ApiOperation("根据套餐id查询套餐")
     public Result<SetmealVO> getById(@PathVariable Long id) {
         log.info("根据套餐id查询套餐");
         SetmealVO setmealVO = setmealService.getById(id);
@@ -94,13 +95,22 @@ public class SetmealController {
      * @return
      */
     @PutMapping
+    @ApiOperation("修改套餐")
     public Result update(@RequestBody SetmealDTO setmealDTO) {
         log.info("修改套餐: {}", setmealDTO);
         setmealService.update(setmealDTO);
         return Result.success();
     }
 
+    /**
+     * 套餐的启售、停售
+     *
+     * @param status
+     * @param id
+     * @return
+     */
     @PostMapping("/status/{status}")
+    @ApiOperation("套餐的启售、停售")
     public Result startOrStop(@PathVariable Integer status, Long id) {  // TODO 忘记注解@PathVariable的作用了，应该是对应路径参数，再去看看
         log.info("套餐的启售、停售: {}, id: {}", status, id); // status中0停售 1启售     id是套餐id
         setmealService.startOrStop(status, id);
