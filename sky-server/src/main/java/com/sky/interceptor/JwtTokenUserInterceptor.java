@@ -15,11 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * jwt令牌校验的拦截器，拦截器在 WebMvcConfiguration 类里面注册
+ * 用户-小程序端的jwt令牌校验的拦截器
+ * 拦截器在 WebMvcConfiguration 类里面注册
  */
 @Component
 @Slf4j
-public class JwtTokenAdminInterceptor implements HandlerInterceptor {
+public class JwtTokenUserInterceptor implements HandlerInterceptor {
 
     @Autowired
     private JwtProperties jwtProperties;
@@ -45,18 +46,19 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
         }
 
         //1、从请求头中获取令牌
-        String token = request.getHeader(jwtProperties.getAdminTokenName());
+        String token = request.getHeader(jwtProperties.getUserTokenName());
 
         //2、校验令牌
         try {
             log.info("jwt校验:{}", token);
-            Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
-            Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
-            // TODO：解析出登录员工id后，如何传递给Service的addEmployee()方法？—— 使用ThreadLocal，线程局部变量
-            // 因为同一次请求，使用的线程相同（controller、jwt解析、service层），使用ThreadLocal线程局部变量可以存用户id (set)，然后后面再取出id (get)
-            BaseContext.setCurrentId(empId);
+            Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), token);
+            Long userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
 
-            log.info("当前员工id：", empId);
+            log.info("当前用户id：", userId);
+            // TODO：使用ThreadLocal，线程局部变量
+            // 因为同一次请求，使用的线程相同（controller、jwt解析、service层），使用ThreadLocal线程局部变量可以存用户id (set)，然后后面再取出id (get)
+            BaseContext.setCurrentId(userId);
+
             //3、通过，放行
             return true;
         } catch (Exception ex) {
