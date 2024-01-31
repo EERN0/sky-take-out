@@ -177,7 +177,7 @@ public class SetmealServiceImpl implements SetmealService {
                 setmealMapper.update(newStemeal);
             }
         } else if (setmeal.getStatus() == StatusConstant.DISABLE) { // 套餐在停售
-            if (status == StatusConstant.ENABLE) {   // 要启售套餐（如果套餐中的菜品在停售中，不能启售）
+            if (status == StatusConstant.ENABLE) {   // 要启售套餐（如果套餐中有的菜品在停售，那这个套餐就不能启售）
 
                 // TODO: 查了太多次数据库，可以一次查出数据，后续修改
                 List<SetmealDish> list = setmealDishMapper.getDishListBySetmealId(id);

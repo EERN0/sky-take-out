@@ -46,6 +46,14 @@ public interface DishService {
 
 
     /**
+     * 菜品的启售停售 -- 如果是停售操作，还需要将包含当前菜品的套餐也停售
+     *
+     * @param status
+     * @param id
+     */
+    void startOrStop(Integer status, Long id);
+
+    /**
      * 根据分类id查询相关菜品
      *
      * @param categoryId
