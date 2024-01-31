@@ -75,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void addEmployee(EmployeeDTO employeeDTO) {
 
         // 输出当前线程的id
-        System.out.println("当前线程的id:" + Thread.currentThread().getId());
+        //System.out.println("当前线程的id:" + Thread.currentThread().getId());
 
         Employee employee = new Employee();
         // 对象属性拷贝，把EmployeeDTO对象属性赋值给Employee对象
