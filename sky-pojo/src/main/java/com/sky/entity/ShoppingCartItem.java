@@ -10,13 +10,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 购物车
+ * 购物车的数据（一条一条的）
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShoppingCart implements Serializable {
+public class ShoppingCartItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

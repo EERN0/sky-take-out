@@ -4,7 +4,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
-import com.sky.entity.ShoppingCart;
+import com.sky.entity.ShoppingCartItem;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.mapper.ShoppingCartMapper;
@@ -36,19 +36,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void addShoppingCart(ShoppingCartDTO shoppingCartDTO) {
         // 判断当前加入到购物车中的商品是否已经存在了
-        ShoppingCart shoppingCart = new ShoppingCart();
-        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCartItem);
         Long userId = BaseContext.getCurrentId();   // 使用ThreadLocal获取当前用户微信id
-        shoppingCart.setUserId(userId);
+        shoppingCartItem.setUserId(userId);
 
         // select * from shopping_cart WHERE user_id = ? and dish_id = ? and dish_flavor = ? 或者 select * from shopping_cart WHERE user_id = ? and dish_id = ?
         // 或者 select * from shopping_cart WHERE user_id = ? and setmealId = ?
         // 动态sql，字段非空就充当条件，加上and一起去数据库里面查
-        List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);    // 若购物车数据库表有这条数据，肯定也只有一条。写成List是为了方便后续的操作
+        List<ShoppingCartItem> list = shoppingCartMapper.list(shoppingCartItem);    // 若购物车数据库表有这条数据，肯定也只有一条。写成List是为了方便后续的【查看购物车】操作
 
         // 如果已经存在了，只用将数量+1（若添加的是不同口味的菜品，购物车还得添加一条数据）
         if (list != null && !list.isEmpty()) {
-            ShoppingCart cart = list.get(0);    // list非空，肯定只有一条数据
+            ShoppingCartItem cart = list.get(0);    // list非空，肯定只有一条数据
             cart.setNumber(cart.getNumber() + 1);   // update shopping_cart set number = ? where id = ?
             shoppingCartMapper.updateNumberById(cart);
         } else {
@@ -58,19 +58,35 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             Long dishId = shoppingCartDTO.getDishId();
             if (dishId != null) {    // 菜品
                 Dish dish = dishMapper.getById(dishId);
-                shoppingCart.setName(dish.getName());
-                shoppingCart.setImage(dish.getImage());
-                shoppingCart.setAmount(dish.getPrice());
+                shoppingCartItem.setName(dish.getName());
+                shoppingCartItem.setImage(dish.getImage());
+                shoppingCartItem.setAmount(dish.getPrice());
             } else {    // dishId==null，是套餐
                 Setmeal setmeal = setmealMapper.getById(shoppingCartDTO.getSetmealId());
-                shoppingCart.setName(setmeal.getName());
-                shoppingCart.setImage(setmeal.getImage());
-                shoppingCart.setAmount(setmeal.getPrice());
+                shoppingCartItem.setName(setmeal.getName());
+                shoppingCartItem.setImage(setmeal.getImage());
+                shoppingCartItem.setAmount(setmeal.getPrice());
             }
-            shoppingCart.setNumber(1);  // 商品数量设置为1
-            shoppingCart.setCreateTime(LocalDateTime.now());
+            shoppingCartItem.setNumber(1);  // 商品数量设置为1
+            shoppingCartItem.setCreateTime(LocalDateTime.now());
 
-            shoppingCartMapper.insert(shoppingCart);
+            shoppingCartMapper.insert(shoppingCartItem);
         }
+    }
+
+    /**
+     * 查看购物车
+     *
+     * @return
+     */
+    @Override
+    public List<ShoppingCartItem> showShoppingCart() {
+        Long userId = BaseContext.getCurrentId();   // 获取当前微信用户的id
+        ShoppingCartItem shoppingCartItem = ShoppingCartItem.builder()
+                .userId(userId)
+                .build();
+
+        List<ShoppingCartItem> list = shoppingCartMapper.list(shoppingCartItem);
+        return list;
     }
 }
