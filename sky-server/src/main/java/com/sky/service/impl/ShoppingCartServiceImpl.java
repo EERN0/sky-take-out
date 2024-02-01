@@ -81,12 +81,23 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      */
     @Override
     public List<ShoppingCartItem> showShoppingCart() {
-        Long userId = BaseContext.getCurrentId();   // 获取当前微信用户的id
+        // 获取当前微信用户的id
+        Long userId = BaseContext.getCurrentId();
         ShoppingCartItem shoppingCartItem = ShoppingCartItem.builder()
                 .userId(userId)
                 .build();
 
         List<ShoppingCartItem> list = shoppingCartMapper.list(shoppingCartItem);
         return list;
+    }
+
+    /**
+     * 清空购物车
+     */
+    @Override
+    public void cleanShoppongCart() {
+        // 获取当前微信用户id
+        Long userId = BaseContext.getCurrentId();
+        shoppingCartMapper.deleteByUserId(userId);
     }
 }
