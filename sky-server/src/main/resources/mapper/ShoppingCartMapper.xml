@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.ShoppingCartMapper">
 
-
+    <!--动态动态条件查询，用户id不能少!-->
     <select id="list" resultType="com.sky.entity.ShoppingCartItem">
         select * from shopping_cart
         <where>

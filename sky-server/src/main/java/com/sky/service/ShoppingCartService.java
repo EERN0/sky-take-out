@@ -25,4 +25,10 @@ public interface ShoppingCartService {
      * 清空购物车
      */
     void cleanShoppongCart();
+
+    /**
+     * 删除购物车中一个商品
+     * @param shoppingCartDTO
+     */
+    void deleteOneShoppingCartItem(ShoppingCartDTO shoppingCartDTO);
 }
