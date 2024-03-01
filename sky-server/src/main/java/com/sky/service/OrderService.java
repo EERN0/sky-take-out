@@ -32,4 +32,9 @@ public interface OrderService {
      * @param status   订单状态: 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
      */
     PageResult pageQuery4User(int page, int pageSize, Integer status);
+
+    /**
+     * 查询订单详情
+     */
+    OrderVO details(Long id);
 }
