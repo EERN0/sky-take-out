@@ -24,4 +24,12 @@ public interface OrderService {
      */
     void paySuccess(String outTradeNo);
 
+    /**
+     * 用户端订单分页查询
+     *
+     * @param page     起始索引 = (查询页码-1) * 每页显示记录数
+     * @param pageSize 每页显示记录数
+     * @param status   订单状态: 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
+     */
+    PageResult pageQuery4User(int page, int pageSize, Integer status);
 }
