@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * 支付订单POST数据的DTO
+ */
 @Data
 public class OrdersSubmitDTO implements Serializable {
     //地址簿id
