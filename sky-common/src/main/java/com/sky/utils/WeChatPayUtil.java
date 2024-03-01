@@ -35,10 +35,10 @@ import java.util.List;
 @Component
 public class WeChatPayUtil {
 
-    //微信支付下单接口地址
+    // 微信支付下单接口地址
     public static final String JSAPI = "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";
 
-    //申请退款接口地址
+    // 申请退款接口地址
     public static final String REFUNDS = "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds";
 
     @Autowired
@@ -46,8 +46,6 @@ public class WeChatPayUtil {
 
     /**
      * 获取调用微信接口的客户端工具对象
-     *
-     * @return
      */
     private CloseableHttpClient getClient() {
         PrivateKey merchantPrivateKey = null;
@@ -129,7 +127,6 @@ public class WeChatPayUtil {
      * @param total       总金额
      * @param description 商品描述
      * @param openid      微信用户的openid
-     * @return
      */
     private String jsapi(String orderNum, BigDecimal total, String description, String openid) throws Exception {
         JSONObject jsonObject = new JSONObject();
@@ -161,11 +158,11 @@ public class WeChatPayUtil {
      * @param total       金额，单位 元
      * @param description 商品描述
      * @param openid      微信用户的openid
-     * @return
      */
     public JSONObject pay(String orderNum, BigDecimal total, String description, String openid) throws Exception {
         //统一下单，生成预支付交易单
         String bodyAsString = jsapi(orderNum, total, description, openid);
+
         //解析返回结果
         JSONObject jsonObject = JSON.parseObject(bodyAsString);
         System.out.println(jsonObject);
@@ -179,7 +176,7 @@ public class WeChatPayUtil {
             list.add(timeStamp);
             list.add(nonceStr);
             list.add("prepay_id=" + prepayId);
-            //二次签名，调起支付需要重新签名
+            // 二次签名，调起支付需要重新签名
             StringBuilder stringBuilder = new StringBuilder();
             for (Object o : list) {
                 stringBuilder.append(o).append("\n");
@@ -192,7 +189,7 @@ public class WeChatPayUtil {
             signature.update(message);
             String packageSign = Base64.getEncoder().encodeToString(signature.sign());
 
-            //构造数据给微信小程序，用于调起微信支付
+            // 构造数据给微信小程序，用于调起微信支付
             JSONObject jo = new JSONObject();
             jo.put("timeStamp", timeStamp);
             jo.put("nonceStr", nonceStr);
@@ -208,11 +205,10 @@ public class WeChatPayUtil {
     /**
      * 申请退款
      *
-     * @param outTradeNo    商户订单号
-     * @param outRefundNo   商户退款单号
-     * @param refund        退款金额
-     * @param total         原订单金额
-     * @return
+     * @param outTradeNo  商户订单号
+     * @param outRefundNo 商户退款单号
+     * @param refund      退款金额
+     * @param total       原订单金额
      */
     public String refund(String outTradeNo, String outRefundNo, BigDecimal refund, BigDecimal total) throws Exception {
         JSONObject jsonObject = new JSONObject();

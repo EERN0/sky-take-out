@@ -26,15 +26,37 @@ public class OrderController {
 
     /**
      * 用户下单
+     *
      * @param ordersSubmitDTO 支付订单所需的数据DTO
      */
     @PostMapping("/submit")
     @ApiOperation("用户下单")
     public Result<OrderSubmitVO> submit(@RequestBody OrdersSubmitDTO ordersSubmitDTO) {
         log.info("用户下单, 参数为: {}", ordersSubmitDTO);
+
         OrderSubmitVO orderSubmitVO = orderService.submitOrder(ordersSubmitDTO);
+
         return Result.success(orderSubmitVO);
     }
 
+    /**
+     * 订单支付
+     *
+     * @param ordersPaymentDTO 订单支付DTO
+     */
+    @PutMapping("/payment")
+    @ApiOperation("订单支付")
+    public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO) throws Exception {
+        log.info("订单支付：{}", ordersPaymentDTO);
+
+        OrderPaymentVO orderPaymentVO = orderService.payment(ordersPaymentDTO);
+        log.info("生成预支付交易单：{}", orderPaymentVO);
+
+        // 模拟支付流程，修改数据库订单状态
+        orderService.paySuccess(ordersPaymentDTO.getOrderNumber());
+        log.info("模拟交易成功，订单号: {}", ordersPaymentDTO.getOrderNumber());
+
+        return Result.success(orderPaymentVO);
+    }
 
 }

@@ -18,6 +18,7 @@
                 #{packAmount}, #{tablewareNumber}, #{tablewareStatus})
     </insert>
 
+    <!--修改订单状态-->
     <update id="update" parameterType="com.sky.entity.Orders">
         update orders
         <set>
@@ -48,6 +49,7 @@
         </set>
         where id = #{id}
     </update>
+
     <select id="pageQuery" resultType="com.sky.entity.Orders">
         select * from orders
         <where>
@@ -72,6 +74,7 @@
         </where>
         order by order_time desc
     </select>
+
     <select id="sumByMap" resultType="java.lang.Double">
         select sum(amount) from orders
         <where>
@@ -86,6 +89,7 @@
             </if>
         </where>
     </select>
+
     <select id="countByMap" resultType="java.lang.Integer">
         select count(id) from orders
         <where>
@@ -100,6 +104,7 @@
             </if>
         </where>
     </select>
+
     <select id="getSalesTop10" resultType="com.sky.dto.GoodsSalesDTO">
         select od.name name,sum(od.number) number from order_detail od ,orders o
         where od.order_id = o.id
@@ -114,4 +119,5 @@
         order by number desc
         limit 0, 10
     </select>
+
 </mapper>

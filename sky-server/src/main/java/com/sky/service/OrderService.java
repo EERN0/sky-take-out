@@ -14,4 +14,14 @@ public interface OrderService {
      */
     OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO);
 
+    /**
+     * 订单支付
+     */
+    OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception;
+
+    /**
+     * 支付成功，修改订单状态
+     */
+    void paySuccess(String outTradeNo);
+
 }
