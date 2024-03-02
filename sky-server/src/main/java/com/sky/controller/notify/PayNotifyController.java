@@ -11,6 +11,7 @@ import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -30,7 +31,7 @@ public class PayNotifyController {
     private WeChatProperties weChatProperties;
 
     /**
-     * 支付成功回调
+     * 支付成功后，微信服务器回调paySuccessNotify方法
      *
      * @param request http请求
      */
@@ -103,9 +104,10 @@ public class PayNotifyController {
 
     /**
      * 给微信响应
+     *
      * @param response
      */
-    private void responseToWeixin(HttpServletResponse response) throws Exception{
+    private void responseToWeixin(HttpServletResponse response) throws Exception {
         response.setStatus(200);
         HashMap<Object, Object> map = new HashMap<>();
         map.put("code", "SUCCESS");

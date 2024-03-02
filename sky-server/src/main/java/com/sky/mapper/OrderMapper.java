@@ -21,10 +21,10 @@ public interface OrderMapper {
     void insert(Orders orders);
 
     /**
-     * 根据订单号查询订单
+     * 根据订单号和用户id查询订单
      */
-    @Select("select * from orders where number = #{orderNumber}")
-    Orders getByNumber(String orderNumber);
+    @Select("select * from orders where number = #{orderNumber} and user_id= #{userId}")
+    Orders getByNumberAndUserId(String orderNumber, Long userId);
 
     /**
      * 修改订单信息
@@ -54,7 +54,8 @@ public interface OrderMapper {
 
     /**
      * 根据订单状态和下单时间查询订单
-     * @param status 订单状态
+     *
+     * @param status    订单状态
      * @param orderTime 下单时间
      * @return
      */
