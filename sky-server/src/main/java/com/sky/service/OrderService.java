@@ -63,4 +63,11 @@ public interface OrderService {
      * admin-各个状态的订单数量统计
      */
     OrderStatisticsVO statistics();
+
+    /**
+     * 接单
+     *
+     * @param ordersConfirmDTO
+     */
+    void confirm(OrdersConfirmDTO ordersConfirmDTO);
 }
