@@ -65,9 +65,9 @@ public interface OrderService {
     OrderStatisticsVO statistics();
 
     /**
-     * 接单
+     * admin-接单
      *
-     * @param ordersConfirmDTO
+     * @param ordersConfirmDTO 订单接收DTO
      */
     void confirm(OrdersConfirmDTO ordersConfirmDTO);
 
@@ -75,4 +75,11 @@ public interface OrderService {
      * 拒单
      */
     void rejection(OrdersRejectionDTO ordersRejectionDTO) throws Exception;
+
+    /**
+     * 商家取消订单
+     *
+     * @param ordersCancelDTO 订单取消DTO
+     */
+    void cancel(OrdersCancelDTO ordersCancelDTO) throws Exception;
 }
