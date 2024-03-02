@@ -15,7 +15,7 @@ public interface OrderService {
     OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO);
 
     /**
-     * 订单支付
+     * 用户-订单支付
      */
     OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception;
 
@@ -34,20 +34,33 @@ public interface OrderService {
     PageResult pageQuery4User(int page, int pageSize, Integer status);
 
     /**
-     * 查询订单详情
+     * 用户-查询订单详情
      */
     OrderVO details(Long id);
 
     /**
-     * 用户取消订单
+     * 用户-取消订单
+     *
      * @param id 订单id
      */
     void userCancelById(Long id) throws Exception;
 
     /**
-     * 再来一单
+     * 用户-再来一单
      *
      * @param id 订单id
      */
     void repetition(Long id);
+
+    /**
+     * admin-条件搜索订单
+     *
+     * @param ordersPageQueryDTO 订单分页查询DTO
+     */
+    PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    /**
+     * admin-各个状态的订单数量统计
+     */
+    OrderStatisticsVO statistics();
 }

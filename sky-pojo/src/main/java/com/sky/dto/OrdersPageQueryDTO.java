@@ -20,8 +20,8 @@ public class OrdersPageQueryDTO implements Serializable {
     // 订单号
     private String number;
 
-
-    private  String phone;
+    // 手机号
+    private String phone;
 
     // 订单状态: 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
     private Integer status;
