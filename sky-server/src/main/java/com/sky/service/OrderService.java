@@ -70,4 +70,9 @@ public interface OrderService {
      * @param ordersConfirmDTO
      */
     void confirm(OrdersConfirmDTO ordersConfirmDTO);
+
+    /**
+     * 拒单
+     */
+    void rejection(OrdersRejectionDTO ordersRejectionDTO) throws Exception;
 }
