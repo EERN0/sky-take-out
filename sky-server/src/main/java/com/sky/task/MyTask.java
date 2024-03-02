@@ -16,8 +16,8 @@ public class MyTask {
     /**
      * 定时任务的处理逻辑
      */
-    @Scheduled(cron = "0/5 * * * * ?")  // 每隔5s执行一次
-    public void executeTask() {
-        log.info("定时任务开始执行: {}", new Date());
-    }
+    //@Scheduled(cron = "0/5 * * * * ?")  // 每隔5s执行一次
+    //public void executeTask() {
+    //    log.info("定时任务开始执行: {}", new Date());
+    //}
 }
